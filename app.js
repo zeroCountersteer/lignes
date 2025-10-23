@@ -1,6 +1,6 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
-import initOCCT, { readStepFile } from "https://cdn.jsdelivr.net/npm/occt-import-js@1.1.1/dist/occt-import-js.esm.js";
+import * as THREE from "https://esm.sh/three@0.160.0";
+import { OrbitControls } from "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+import initOCCT, { readStepFile } from "https://esm.sh/occt-import-js@1.1.1/dist/occt-import-js.esm.js";
 
 const stage = document.getElementById("stage");
 const fileInput = document.getElementById("fileInput");
@@ -103,32 +103,16 @@ async function loadStepFromBuffer(buf, name){
     }
     try{
         setStatus("Импорт STEP: " + name);
-        // Импортируем и тесселируем через occt-import-js
-        const result = readStepFile(occt, new Uint8Array(buf), {
-            // density: 0.6 — можно добавить параметры тесселяции при желании
-        });
-
-        // result содержит массивы поверхностей/тел; строим three.js меши
+        const result = readStepFile(occt, new Uint8Array(buf), {});
         const group = new THREE.Group();
         for(const solid of result.meshes){
             const geom = new THREE.BufferGeometry();
             geom.setAttribute("position", new THREE.Float32BufferAttribute(solid.attributes.position.array, 3));
-            if (solid.index) {
-                geom.setIndex(Array.from(solid.index.array));
-            }
+            if (solid.index) geom.setIndex(Array.from(solid.index.array));
             geom.computeVertexNormals();
-
-            const mat = new THREE.MeshStandardMaterial({
-                metalness: 0.05,
-                roughness: 0.85,
-                color: 0xbfc7d5
-            });
-            const mesh = new THREE.Mesh(geom, mat);
-            mesh.castShadow = false;
-            mesh.receiveShadow = false;
-            group.add(mesh);
+            const mat = new THREE.MeshStandardMaterial({ metalness:0.05, roughness:0.85, color:0xbfc7d5 });
+            group.add(new THREE.Mesh(geom, mat));
         }
-
         setModel(group);
         fitView();
         setStatus("Готово: " + name + ` (полигонов: ${countTriangles(group)})`);
@@ -165,13 +149,11 @@ function fitView(){
     const box = new THREE.Box3().setFromObject(currentModel);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
-
     const maxDim = Math.max(size.x,size.y,size.z) || 1;
     const dist = maxDim * 2.2;
     camera.near = maxDim/1000;
     camera.far = maxDim*100;
     camera.updateProjectionMatrix();
-
     controls.target.copy(center);
     camera.position.copy(center.clone().add(new THREE.Vector3(dist, dist, dist)));
     controls.update();
@@ -209,15 +191,11 @@ function countTriangles(group){
 function setStatus(msg){ statusEl.textContent = msg; }
 
 function resize(){
-    const w = stage.clientWidth || stage.offsetWidth;
+    const w = stage.clientWidth || stage.offsetWidth || 1;
     const h = stage.clientHeight || stage.offsetHeight || 1;
-    if(renderer){
-        renderer.setSize(w,h,false);
-    }
-    if(camera){
-        camera.aspect = w/h;
-        camera.updateProjectionMatrix();
-    }
+    renderer.setSize(w,h,false);
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
 }
 
 function animate(){
