@@ -1,0 +1,16 @@
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{display:flex;flex-direction:column;background:#0c0f14;color:#e6e9ef;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+.topbar,.bottombar{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:#0f131a;border-bottom:1px solid #1a202b}
+.bottombar{justify-content:space-between;border-top:1px solid #1a202b;border-bottom:none}
+h1{font-size:1rem;margin:0;opacity:.9}
+.controls{display:flex;gap:.5rem;margin-left:auto}
+.btn{appearance:none;border:1px solid #2a3342;background:#121823;color:#e6e9ef;border-radius:.5rem;padding:.5rem .75rem;font-size:.9rem;cursor:pointer;transition:transform .02s ease,background .2s ease}
+.btn:active{transform:translateY(1px)}
+.btn:hover{background:#18202c}
+#stageWrap{position:relative;flex:1}
+#stage{position:absolute;inset:0}
+#dropHint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border:2px dashed #2a3342;border-radius:.75rem;margin:1rem;pointer-events:none;color:#9aa4b2;opacity:.12;transition:opacity .2s}
+#stageWrap.dragover #dropHint{opacity:.9}
+.help{opacity:.6;font-size:.85rem}
+#status{font-size:.9rem;opacity:.85}
