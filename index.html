@@ -3,42 +3,42 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>STEP Viewer</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<title>GLB Viewer — Fast</title>
 <link rel="stylesheet" href="styles.css">
 <script type="importmap">
 {
   "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+    "three": "./vendor/three.module.js"
   }
 }
 </script>
 </head>
 <body>
 <header class="topbar">
-  <h1>STEP Viewer</h1>
+  <h1>GLB Viewer</h1>
   <div class="controls">
     <label class="btn">
-      <input id="fileInput" type="file" accept=".step,.stp" hidden>
-      Загрузить STEP
+      <input id="fileInput" type="file" accept=".glb,.gltf" hidden>
+      Загрузить GLB
     </label>
-    <button id="loadRepoBtn" class="btn">Открыть models/model.step</button>
+    <button id="loadRepoBtn" class="btn">Открыть models/model.glb</button>
     <button id="fitBtn" class="btn">Fit</button>
     <button id="explodeBtn" class="btn">Explode</button>
     <button id="clearBtn" class="btn">Очистить</button>
+    <div class="slider-wrap">
+      <label for="opacityRange">Прозрачность</label>
+      <input id="opacityRange" type="range" min="0" max="1" step="0.05" value="1">
+    </div>
   </div>
 </header>
-
 <main id="stageWrap">
   <div id="stage" tabindex="0" aria-label="3D viewport"></div>
-  <div id="dropHint">Перетащи сюда .step/.stp</div>
+  <div id="dropHint">Перетащи сюда .glb/.gltf</div>
 </main>
-
 <footer class="bottombar">
   <div id="status">Готово</div>
-  <div class="help">Колёсико — зум, ЛКМ — вращать, Shift+ЛКМ — панорама</div>
+  <div class="help">ЛКМ — выбрать, Ctrl+клик — мультивыбор</div>
 </footer>
-
 <script type="module" src="app.js"></script>
 </body>
 </html>
